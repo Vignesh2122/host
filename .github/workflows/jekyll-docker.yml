@@ -24,6 +24,11 @@ jobs:
         id: login-pf-aws-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Create ECR repository 
+        run: |
+          aws ecr describe-repositories --repository-names ${{ secrets.REPO_NAME }} || \
+          aws ecr create-repository --repository-name ${{ secrets.REPO_NAME }}
+
       - name: Build and push Docker image
         env:
           ECR_REGISTRY: ${{ steps.login-pf-aws-ecr.outputs.registry }}
